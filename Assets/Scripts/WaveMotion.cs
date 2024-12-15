@@ -9,7 +9,8 @@ public class WaveMotion : MonoBehaviour
     public float maxRotation = 80f;
     public float minRotation = 40f;
     public float delayBetweenPairs = 0.3f;
-    public float rotationSpeed = 0.05f;
+    public float maxRotationSpeed = 0.7f;
+    public float minRotationSpeed = 0.3f;
     private float timeCounter = 0f;
 
     void Update()
@@ -23,8 +24,10 @@ public class WaveMotion : MonoBehaviour
             if (timeCounter > pairDelay)
             {
                 float targetRotation = CalculateRotationAngle(i);
-                float cycleTime = (timeCounter - pairDelay) * rotationSpeed;
-                float oscillation = Mathf.PingPong(cycleTime, 1f);  //I learn this method from online video for smooth oscillation 
+                float cycleTime = (timeCounter - pairDelay);
+                float oscillationProgress = cycleTime / (i * delayBetweenPairs);
+                float rotationSpeed = Mathf.Lerp(minRotationSpeed, maxRotationSpeed, oscillationProgress);
+                float oscillation = Mathf.PingPong(cycleTime * rotationSpeed, 1f);
                 float rightAngle = initialAngle - oscillation * (initialAngle - targetRotation);
                 float leftAngle = initialAngle + oscillation * (initialAngle - targetRotation);
 
